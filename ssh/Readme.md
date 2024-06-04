@@ -1,8 +1,43 @@
-# SSH Setup Instructions
+This is a guide for setting up SSH servers within the CPSL lab. A few more helpful resources can be found here:
+
+1. [Guide to configuring SSH in ubuntu](https://itsfoss.com/set-up-ssh-ubuntu/)
+2. [Adding public key to ubuntu server](https://linuxhandbook.com/add-ssh-public-key-to-server/?ref=itsfoss.com)
+3. [transfering files](https://www.baeldung.com/linux/transfer-files-ssh)
+4. [Running jupyter notebooks over ssh](https://stackoverflow.com/questions/69244218/how-to-run-a-jupyter-notebook-through-a-remote-server-on-local-machine)
+
+# Setuping up servers and clients
 
 ## Setting Up Ubuntu Server
 
+### Check ssh status
+1. First, check to see if the ssh package is already installed and running on the machine by running the following command in the terminal
+```
+service ssh status
+```
+You should get something stating that the service is active. If so, move onto setting up your ssh client. If it isn't installed, use the following steps to install ssh on the server
+
+### Installing SSH on the server
+1. Run the following commands in the terminal to install ssh
+```
+sudo apt update && sudo apt upgrade
+sudo apt install openssh-server
+```
+
 ## Setting Up Linux Client
+To start, we will need to setup the openssh client on unbuntu.
+
+### Installing Open SSH client on your machine
+1. Check to see if ssh is already installed on your machine by using the following command
+```
+dpkg -l | grep ssh
+```
+If you see "openssh-client" listed, then ssh is already installed and you can move onto the post-installation steps
+
+2. If you don't have ssh installed on your machine, go ahead and install it using the following command
+```
+sudo apt install openssh-client
+```
+
 
 ## Setting Up Windows Client
 
@@ -27,8 +62,9 @@ $PSVersionTable.PSVersion
 2. Check to make sure that "OpenSSH Client" is installed. If not, select "Add a feature" and install "OpenSSH Client"
 3. Open the Services desktop app. (Select Start, type services.msc in the search box, and then select the Service app or press ENTER.)
 
-### Connect to OpenSSH Server
-#### First Connection
+# Connecting to server over SSH
+
+## 1st connection
 1. To initially connect to the ssh server, type the following
 ```
 ssh username@ipaddress
@@ -40,7 +76,9 @@ ECDSA key fingerprint is SHA256:(<a large string>).
 Are you sure you want to continue connecting (yes/no)?
 ```
 After this, you will be prompted for a password. Enter the password to log into the server.
-#### Creating a public-private key for more secure authentication
+
+## Creating a public-private key for more secure authentication
+We will now create a public-private key to allow for a more secure connection. The instructions are for Windows machines, but they should still work for linux/ubuntu machines as well
 1. Open powershell and enter the following command
 ```
 ssh-keygen -t ed25519
@@ -72,7 +110,7 @@ The key's randomart image is:
 |+.o+=o. .        |
 +----[SHA256]-----+
 ```
-Here, the .pub files are your public keys and the files without extensions are private keys. To protect the private keys, enter the following commands (uncommented out ones) in a powershell prompt
+Here, the .pub files are your public keys and the files without extensions are private keys. To protect the private keys, enter the following commands (uncommented out ones) in a powershell prompt (windows only)
 ```
 # By default the ssh-agent service is disabled. Configure it to start automatically.
 # Make sure you're running as an Administrator.
@@ -88,7 +126,17 @@ Get-Service ssh-agent
 ssh-add $env:USERPROFILE\.ssh\id_ed25519
 ```
 
-#### Adding Public Key to Server
+### Adding Public Key to Server
+
+#### Linux users: 
+1. If you are using linux, use the following command to add your public key to the server.
+```
+cd ~/.ssh/
+ssh-copy-id -i id_rsa.pub username@ipaddress
+```
+here, replace id_rsa.pub with the name of the public key you created, username with your user name on the server, and ipaddress with the ip address of the server.
+
+#### Windows users:
 1. Follow the instructions under "Setting Up Remote SSH on VS Code" to add the newly created public key to the server
 
 ## Setting Up Remote SSH on VS Code

@@ -58,9 +58,12 @@ $PSVersionTable.PSVersion
 (New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 ```
 #### Installation
-1. Open "Settings", select "Apps", then select "Optional Features"
-2. Check to make sure that "OpenSSH Client" is installed. If not, select "Add a feature" and install "OpenSSH Client"
+1. Open "Settings", select "System", then select "Optional Features"
+2. Check to make sure that "OpenSSH Client" and "OpenSSH Server" are installed. If not, select "Add a feature" and install "OpenSSH Client" and "OpenSSH Server"
 3. Open the Services desktop app. (Select Start, type services.msc in the search box, and then select the Service app or press ENTER.)
+4. In the details pane, double-click OpenSSH SSH Server
+5. On the General tab, from the Startup type drop-down menu, select Automatic and then select Ok.
+6. To start SSH for the first time, select Start
 
 # Connecting to server over SSH
 
